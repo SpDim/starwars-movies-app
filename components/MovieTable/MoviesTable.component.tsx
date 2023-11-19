@@ -6,24 +6,26 @@ interface MovieTableProps {
 }
 
 const MovieTable: React.FC<MovieTableProps> = ({ movies }) => (
-  <table>
-    <thead>
-      <tr>
-        <th>Episode</th>
-        <th>Official Title</th>
-        <th>Release Date</th>
-      </tr>
-    </thead>
-    <tbody>
-      {movies.map((movie, index) => (
-        <tr key={index}>
-          <td>{movie.episode_id}</td>
-          <td>{movie.title}</td>
-          <td>{movie.release_date}</td>
-        </tr>
-      ))}
-    </tbody>
-  </table>
+    <div className="table-responsive">
+      <table className="table table-primary table-hover">
+        <thead>
+          <tr>
+            <th scope="col">Episode</th>
+            <th scope="col">Official Title</th>
+            <th scope="col">Release Date</th>
+          </tr>
+        </thead>
+        <tbody>
+          {movies.map((movie) => (
+            <tr key={movie.episode_id} style={{ cursor: 'pointer' }}>
+              <th scope="row">{movie.episode_id}</th>
+              <td>{movie.title}</td>
+              <td>{movie.release_date}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
 );
 
 export default MovieTable;

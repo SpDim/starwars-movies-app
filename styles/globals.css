@@ -1,0 +1,10 @@
+body {
+    font-family: 'Helvetica', sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+.table-responsive {
+    width: 50%;
+    font-family: 'Times New Roman', Times, serif;
+}
