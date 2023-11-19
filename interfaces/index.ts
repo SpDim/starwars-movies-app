@@ -3,5 +3,5 @@ export type Movie = {
   title: string;
   release_date: string;
   director: string;
-  description: string;
+  opening_crawl: string;
 }

@@ -4,7 +4,36 @@ body {
     padding: 0;
 }
 
+.movies {
+    display: flex;
+}
+
 .table-responsive {
-    width: 50%;
+    /* width: 70%; */
+    flex: 55%;
     font-family: 'Times New Roman', Times, serif;
+    border-right: 1px solid #ccc;
+    /* flex-wrap: nowrap; */
+}
+
+.table-details {
+    flex: 45%;
+    margin-left: 0.5rem;
+    font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    word-wrap:break-word;
+    /* max-width: 40%; */
+    /* flex-wrap: wrap; */
+}
+
+tr {
+    text-wrap: nowrap;
+    cursor: pointer;
+}
+
+.movie-details {
+    font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    word-wrap:break-word;
+    /* max-width: 40%; */
+    /* margin: 0;
+    padding: 0; */
 }

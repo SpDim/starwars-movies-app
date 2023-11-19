@@ -2,11 +2,16 @@ import React, { useState, useEffect } from 'react';
 import MovieTable from './MoviesTable.component';
 import { Movie } from '../../interfaces';
 
-interface MovieTableContainerProps {};
+interface MovieTableContainerProps {
+  onMovieSelect: (movie: Movie | null) => void;
+};
 
-const MovieTableContainer: React.FC<MovieTableContainerProps> = () => {
+const MovieTableContainer: React.FC<MovieTableContainerProps> = ({ onMovieSelect }) => {
   const [movies, setMovies] = useState<Movie[]>([]);
-  // NEXT_PUBLIC_FILMS_ENDPOINT
+  const [selectedMovie, setSelectedMovie] = React.useState<Movie | null>(null);
+  const handleMovieSelect = (movie: Movie) => {
+    setSelectedMovie(movie);
+  };
 
   useEffect(() => {
     const fetchMovies = async () => {
@@ -22,7 +27,17 @@ const MovieTableContainer: React.FC<MovieTableContainerProps> = () => {
     fetchMovies();
   }, []);
 
-  return <MovieTable movies={movies} />;
+  const containerProps = {
+    movies,
+    selectedMovie
+  }
+
+  const containerFunctions = {
+    onMovieSelect,
+    handleMovieSelect
+  }
+
+  return <MovieTable {...containerProps} {...containerFunctions} />;
 };
 
 export default MovieTableContainer;
