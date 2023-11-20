@@ -24,7 +24,21 @@ body {
 }
 
 h4 {
+    margin-left: 0.5rem;
+    margin-top: 0.5rem;
     font-family:'Times New Roman', Times, serif;
+}
+
+.poster-preview {
+    display: flex;
+    width: 180px;
+    height: auto;
+    object-fit: cover;
+    margin-right: 5px; 
+}
+
+.poster-container {
+    flex-shrink: 0;
 }
 
 .search-movie {
@@ -45,6 +59,7 @@ h4 {
 }
 
 .table-details {
+    display: flex;
     flex: 45%;
     margin-left: 0.5rem;
     font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
@@ -64,4 +79,8 @@ tr {
     /* max-width: 40%; */
     /* margin: 0;
     padding: 0; */
+}
+
+.movie-details-container {
+    flex-grow: 1;
 }

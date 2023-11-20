@@ -4,4 +4,5 @@ export type Movie = {
   release_date: string;
   director: string;
   opening_crawl: string;
+  poster_url?: string;
 }

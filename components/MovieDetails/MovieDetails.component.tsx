@@ -5,7 +5,7 @@ interface MovieDetailsComponentProps {
   selectedMovie: Movie | null;
 }
 
-const MovieDetails: React.FC<MovieDetailsComponentProps> = ({ selectedMovie }) => {
+const MovieDetails: React.FC<MovieDetailsComponentProps> = React.memo(({ selectedMovie }) => {
   if (selectedMovie) {
     console.log('Episode is selected');
   } else {
@@ -35,6 +35,6 @@ const MovieDetails: React.FC<MovieDetailsComponentProps> = ({ selectedMovie }) =
       )}
     </div>
   );
-}
+});
 
 export default MovieDetails;

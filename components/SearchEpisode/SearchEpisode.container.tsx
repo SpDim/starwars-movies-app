@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import SearchEpisode from './SearchEpisode.component';
 import MoviesTable from '../MoviesTable/MoviesTable.component';
 import MovieDetails from '../MovieDetails/MovieDetails.component';
@@ -32,32 +32,57 @@ const SearchEpisodeContainer: React.FC<SearchEpisodeContainerProps> = ({ fetchEp
     fetchData();
   }, [fetchEpisodes]);
 
+  const fetchPosterUrls = async () => {
+    const currentMovies = [...movies];
+
+    const updatedMovies = await Promise.all(
+      currentMovies.map(async (movie) => {
+        try {
+          const response = await fetch(`${process.env.NEXT_PUBLIC_OMDB_URI}&t=${encodeURIComponent(movie.title)}`);
+          const data = await response.json();
+          return { ...movie, poster_url: data.Poster || '' };
+        } catch (error) {
+          console.error(`Error fetching poster for ${movie.title}:`, error);
+          return { ...movie, poster_url: '' };
+        }
+      })
+    );
+
+    setMovies(updatedMovies);
+  };
+
   useEffect(() => {
-      if (selectedMovie) {
-        return setHeader("Star Wars Saga Movies Table");
-      }
+    fetchPosterUrls();
+  }, [selectedMovie]);
+  
+
+  const sortedAndFilteredMovies = useMemo(() => {
+    let episodes = [...movies];
+
+    if (sortBy === "episode_id") {
+      episodes.sort((a, b) => a.episode_id - b.episode_id);
+    } else if (sortBy === "release_date") {
+      episodes.sort((a, b) => new Date(a.release_date).getTime() - new Date(b.release_date).getTime());
+    }
+
+    if (searchText) {
+      episodes = episodes.filter(movie => movie.title.toLowerCase().includes(searchText.toLowerCase()));
+    }
+
+    return episodes;
+  }, [movies, sortBy, searchText]);
+
+
+  useEffect(() => {
+    if (selectedMovie) {
+      return setHeader("Star Wars Saga Movies Table");
+    } else {
       setHeader(initialHeader);
+    }
 
   }, [selectedMovie]);
 
-  useEffect(() => {
-    const sortedMovies = [...movies];
-
-    if (sortBy === 'episode_id') {
-      sortedMovies.sort((a, b) => a.episode_id - b.episode_id);
-    } else if (sortBy === 'release_date') {
-      sortedMovies.sort((a, b) => new Date(a.release_date).getTime() - new Date(b.release_date).getTime());
-    }
-
-    console.log('Sorted movies:', sortedMovies);
-
-    setFilteredMovies(sortedMovies);
-    setMovies(sortedMovies);
-  }, [sortBy]);
-
   const handleSearchChange = (text: string) => {
-    const filtered = movies.filter((movie) => movie.title.toLowerCase().includes(text.toLowerCase()));
-    setFilteredMovies(filtered);
     setSearchText(text);
     setSelectedMovie(null);
   };
@@ -67,7 +92,9 @@ const SearchEpisodeContainer: React.FC<SearchEpisodeContainerProps> = ({ fetchEp
   };
 
   const handleSortChange = (newSortingOption: 'episode_id' | 'release_date') => {
-    setSortBy(newSortingOption);
+    if (newSortingOption !== sortBy) {
+      setSortBy(newSortingOption);
+    }
   };
 
   return (
@@ -76,12 +103,11 @@ const SearchEpisodeContainer: React.FC<SearchEpisodeContainerProps> = ({ fetchEp
       <SearchEpisode onSearchChange={handleSearchChange} onSortChange={handleSortChange}/>
       {/* <SortMoviesContainer onSortChange={handleSortChange}/> */}
       <MoviesTable 
-        movies={searchText ? filteredMovies : movies} 
+        movies={sortedAndFilteredMovies} 
         onMovieSelect={handleMovieSelect}
         selectedMovie={selectedMovie}
         handleMovieSelect={handleMovieSelect} 
       />
-      {/* <MovieDetails selectedMovie={selectedMovie} /> */}
     </>
   );
 };

@@ -29,7 +29,7 @@ const MovieTable: React.FC<MovieTableComponentProps> = ({ movies, selectedMovie,
                   {movies.map((movie) => (
                     <tr
                       key={movie.episode_id}
-                      onClick={() => onMovieSelect(movie)}
+                      onClick={() => handleMovieSelect(movie)}
                     >
                       <td scope="row">{`${episode} ${movie.episode_id}`}</td>
                       <td>{`${episode} ${movie.episode_id} - ${movie.title}`}</td>
@@ -40,8 +40,13 @@ const MovieTable: React.FC<MovieTableComponentProps> = ({ movies, selectedMovie,
               </table>
           </div>
           {selectedMovie && (
-            <div className='table-details'>
-              <MovieDetails selectedMovie={selectedMovie} />
+            <div className="table-details">
+              <div className="poster-container">
+                <img src={selectedMovie?.poster_url} alt={`Movie poster of ${selectedMovie.title}`} className="poster-preview"/>
+              </div>
+              <div>
+                <MovieDetails selectedMovie={selectedMovie} />
+              </div>
             </div>
           )}
         </div>
