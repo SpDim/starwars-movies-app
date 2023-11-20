@@ -4,8 +4,18 @@ body {
     padding: 0;
 }
 
+.container-movie {
+    background-color: rgb(241, 241, 241);
+    padding: 1rem;
+}
+
 .movies {
     display: flex;
+}
+
+.search-movie {
+    width: 100%;
+    border-radius: 5px;
 }
 
 .table-responsive {

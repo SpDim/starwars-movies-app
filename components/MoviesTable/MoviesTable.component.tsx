@@ -1,16 +1,17 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Movie } from '../../interfaces';
 import MovieDetails from '../MovieDetails/MovieDetails.component';
 
 interface MovieTableComponentProps {
   movies: Movie[];
-  onMovieSelect: (movie: Movie | null) => void;
+  onMovieSelect: (movie: Movie) => void;
   selectedMovie: Movie | null;
   handleMovieSelect: (movie: Movie) => void;
 }
 
-const MovieTable: React.FC<MovieTableComponentProps> = ({ movies, selectedMovie, handleMovieSelect }) => {
-    const episode = "EPISODE";
+const MovieTable: React.FC<MovieTableComponentProps> = ({ movies, selectedMovie, handleMovieSelect, onMovieSelect }) => {
+    const episode: string = "EPISODE";
+
     return (
         <div className='movies'>
             <div className="table-responsive">
@@ -19,7 +20,7 @@ const MovieTable: React.FC<MovieTableComponentProps> = ({ movies, selectedMovie,
                   {movies.map((movie) => (
                     <tr
                       key={movie.episode_id}
-                      onClick={() => handleMovieSelect(movie)}
+                      onClick={() => onMovieSelect(movie)}
                     >
                       <td scope="row">{`${episode} ${movie.episode_id}`}</td>
                       <td>{`${episode} ${movie.episode_id} - ${movie.title}`}</td>
