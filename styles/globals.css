@@ -4,6 +4,12 @@ body {
     padding: 0;
 }
 
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
 .container-movie {
     background-color: rgb(241, 241, 241);
     padding: 1rem;

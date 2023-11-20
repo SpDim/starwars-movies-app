@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Movie } from '../../interfaces';
 import MovieDetails from '../MovieDetails/MovieDetails.component';
+import { CircularProgress } from '@mui/material';
 
 interface MovieTableComponentProps {
   movies: Movie[];
@@ -11,8 +12,16 @@ interface MovieTableComponentProps {
 
 const MovieTable: React.FC<MovieTableComponentProps> = ({ movies, selectedMovie, handleMovieSelect, onMovieSelect }) => {
     const episode: string = "EPISODE";
+    const [loading, setLoading] = useState(true);
 
-    return (
+    useEffect(() => {
+      if (movies && movies.length) {
+        setLoading(false);
+      }
+    }, [movies]);
+
+    const renderTableOrSpinner = (): React.JSX.Element => {
+      return (!loading ? (
         <div className='movies'>
             <div className="table-responsive">
               <table className="table table-hover">
@@ -36,7 +45,13 @@ const MovieTable: React.FC<MovieTableComponentProps> = ({ movies, selectedMovie,
             </div>
           )}
         </div>
-    );
+      ) :
+      <div className='container'>
+        <CircularProgress color="inherit"/>
+      </div>);
+    }
+
+    return (renderTableOrSpinner());
 }
 
 export default MovieTable;
