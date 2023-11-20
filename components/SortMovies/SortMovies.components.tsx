@@ -1,4 +1,3 @@
-import dynamic from 'next/dynamic';
 import React, { useEffect } from 'react';
 
 interface SortButtonComponentProps {
@@ -15,19 +14,6 @@ const SortMovies: React.FC<SortButtonComponentProps> = ({ onSortChange }) => {
 
     return () => {};
   }, []);
-
-  // const renderTwoButtons = (): React.JSX.Element => {
-  //   return (
-  //     <div className="dropdown-menu" aria-labelledby="dropdownMenuButtons">
-  //       <button className="dropdown-item" onClick={() => handleSortChange('episode_id')}>
-  //         Episode
-  //       </button>
-  //       <button className="dropdown-item" onClick={() => handleSortChange('release_date')}>
-  //         Release Date
-  //       </button>
-  //     </div>
-  //   );
-  // }
   
   return (
     <div className="dropdown">

@@ -16,16 +16,8 @@ const MovieDetails: React.FC<MovieDetailsComponentProps> = React.memo(({ selecte
     <div className='container'>
       {selectedMovie && (
         <div>
-          {/* <h2>{selectedMovie.opening_crawl}</h2> */}
-
           <h3>{selectedMovie.title}</h3>
-          {/* <table className="table table-hover">
-              <tbody>
-                  <tr>
-                      <td>{selectedMovie.opening_crawl}</td>
-                  </tr>
-              </tbody>
-          </table> */}
+
           <div className='movie-details'>
               {selectedMovie.opening_crawl}
           </div><br />

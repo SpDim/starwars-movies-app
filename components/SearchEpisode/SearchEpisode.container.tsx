@@ -1,12 +1,9 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import SearchEpisode from './SearchEpisode.component';
 import MoviesTable from '../MoviesTable/MoviesTable.component';
-import MovieDetails from '../MovieDetails/MovieDetails.component';
 import { Movie } from '../../interfaces';
-import SortMoviesContainer from '../SortMovies/SortMovies.container';
 
 interface SearchEpisodeContainerProps {
-//   movies: Movie[];
   fetchEpisodes: () => Promise<Movie[]>;
 }
 
@@ -101,7 +98,6 @@ const SearchEpisodeContainer: React.FC<SearchEpisodeContainerProps> = ({ fetchEp
     <>
       <h4>{header}</h4><br />
       <SearchEpisode onSearchChange={handleSearchChange} onSortChange={handleSortChange}/>
-      {/* <SortMoviesContainer onSortChange={handleSortChange}/> */}
       <MoviesTable 
         movies={sortedAndFilteredMovies} 
         onMovieSelect={handleMovieSelect}

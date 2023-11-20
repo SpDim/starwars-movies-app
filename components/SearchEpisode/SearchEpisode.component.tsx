@@ -1,22 +1,10 @@
 import React from 'react';
-import SortMovies from '../SortMovies/SortMovies.components';
 import SortMoviesContainer from '../SortMovies/SortMovies.container';
 
 interface SearchEpisodeComponentProps {
-  // sortTerm: string;
   onSearchChange: (searchText: string) => void;
   onSortChange: (sortBy: string) => void;
 }
-
-// const SearchEpisode: React.FC<SearchEpisodeComponentProps> = ({ onSearchChange }) => (
-//     <div className='container-movie'>
-//       <input className='search-movie'
-//         type="text"
-//         placeholder="Type to search..."
-//         onChange={(e) => onSearchChange(e.target.value)}
-//       />
-//     </div>
-// );
 
 const SearchEpisode: React.FC<SearchEpisodeComponentProps> = ({ onSearchChange, onSortChange }) => {
   // const sortBy = sortTerm;
