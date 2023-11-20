@@ -72,9 +72,9 @@ const SearchEpisodeContainer: React.FC<SearchEpisodeContainerProps> = ({ fetchEp
 
   return (
     <>
-      <h3>{header}</h3>
-      <SearchEpisode onSearchChange={handleSearchChange} />
-      <SortMoviesContainer onSortChange={handleSortChange}/>
+      <h4>{header}</h4><br />
+      <SearchEpisode onSearchChange={handleSearchChange} onSortChange={handleSortChange}/>
+      {/* <SortMoviesContainer onSortChange={handleSortChange}/> */}
       <MoviesTable 
         movies={searchText ? filteredMovies : movies} 
         onMovieSelect={handleMovieSelect}

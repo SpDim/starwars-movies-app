@@ -11,17 +11,29 @@ body {
 }
 
 .container-movie {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
     background-color: rgb(241, 241, 241);
     padding: 1rem;
+    margin: 0 auto;
 }
 
 .movies {
     display: flex;
 }
 
+h4 {
+    font-family:'Times New Roman', Times, serif;
+}
+
 .search-movie {
     width: 100%;
     border-radius: 5px;
+}
+
+.dropdown {
+    width: 8%;
 }
 
 .table-responsive {

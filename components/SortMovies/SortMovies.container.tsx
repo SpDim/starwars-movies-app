@@ -6,13 +6,15 @@ interface SortMoviesContainerProps {
 }
 
 const SortMoviesContainer: React.FC<SortMoviesContainerProps> = ({ onSortChange }) => {
-  const handleSortChange = (sortBy: 'episode_id' | 'release_date') => {
-    console.log('Sort option changed to:', sortBy);
+  // const handleSortChange = (sortBy: 'episode_id' | 'release_date') => {
+  //   console.log('Sort option changed to:', sortBy);
     
-    onSortChange(sortBy);
-  };
+  //   onSortChange(sortBy);
+  // };
 
-  return <SortMovies onSortChange={handleSortChange} />;
+  // return <SortMovies onSortChange={handleSortChange} />;
+  
+  return <SortMovies onSortChange={onSortChange} />;
 };
 
 export default SortMoviesContainer;
