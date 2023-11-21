@@ -3,10 +3,12 @@ import MovieTable from './MoviesTable.component';
 import { Movie } from '../../interfaces';
 
 interface MovieTableContainerProps {
+  ratings: Object | undefined;
+  averageRating: React.JSX.Element;
   onMovieSelect: (movie: Movie | null) => void;
 };
 
-const MovieTableContainer: React.FC<MovieTableContainerProps> = ({ onMovieSelect }) => {
+const MovieTableContainer: React.FC<MovieTableContainerProps> = ({ ratings, averageRating, onMovieSelect }) => {
   const [movies, setMovies] = useState<Movie[]>([]);
   const [selectedMovie, setSelectedMovie] = React.useState<Movie | null>(null);
   const handleMovieSelect = (movie: Movie) => {
@@ -29,7 +31,9 @@ const MovieTableContainer: React.FC<MovieTableContainerProps> = ({ onMovieSelect
 
   const containerProps = {
     movies,
-    selectedMovie
+    selectedMovie,
+    ratings,
+    averageRating
   }
 
   const containerFunctions = {

@@ -1,7 +1,9 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import SearchEpisode from './SearchEpisode.component';
 import MoviesTable from '../MoviesTable/MoviesTable.component';
-import { Movie } from '../../interfaces';
+import { Movie, Omdp } from '../../interfaces';
+import decimalToRomanNumerals from '../../utils/convertNumbers';
+import StarRatingComponent from '../StarRating/StarRating.component';
 
 interface SearchEpisodeContainerProps {
   fetchEpisodes: () => Promise<Movie[]>;
@@ -12,9 +14,10 @@ const SearchEpisodeContainer: React.FC<SearchEpisodeContainerProps> = ({ fetchEp
   const [movies, setMovies] = useState<Movie[]>([]);
   const [filteredMovies, setFilteredMovies] = useState<Movie[]>([]);
   const [selectedMovie, setSelectedMovie] = useState<Movie | null>(null);
-  const initialHeader: string = "Please select a film to see details, such as opening crawl and director."
+  const initialHeader: string = "Please select a film to see details, such as opening crawl, director and ratings."
   const [header, setHeader] = useState(initialHeader);
   const [sortBy, setSortBy] = useState<'episode_id' | 'release_date' | null>(null);
+  const [ratings, setRatings] = useState<Object | undefined>({});
 
   useEffect(() => {
     const fetchData = async () => {
@@ -29,15 +32,37 @@ const SearchEpisodeContainer: React.FC<SearchEpisodeContainerProps> = ({ fetchEp
     fetchData();
   }, [fetchEpisodes]);
 
+  useEffect(() => {
+    if (selectedMovie) {
+      return setHeader("Star Wars Saga Movies Table");
+    } else {
+      setHeader(initialHeader);
+    }
+
+  }, [selectedMovie]);
+
+  useEffect(() => {
+    fetchPosterUrls();
+    fetchRatings();
+  }, [selectedMovie]);
+  
+
   const fetchPosterUrls = async () => {
     const currentMovies = [...movies];
 
     const updatedMovies = await Promise.all(
       currentMovies.map(async (movie) => {
         try {
-          const response = await fetch(`${process.env.NEXT_PUBLIC_OMDB_URI}&t=${encodeURIComponent(movie.title)}`);
-          const data = await response.json();
-          return { ...movie, poster_url: data.Poster || '' };
+          const endpoint = "Star Wars: Episode " + decimalToRomanNumerals(selectedMovie?.episode_id) + " - " + selectedMovie?.title;
+          const response = await fetch(`${process.env.NEXT_PUBLIC_OMDB_URI}&t=${encodeURIComponent(endpoint)}`);
+          const data: Omdp = await response.json();
+
+          movie.poster_url = data.Poster || '';
+          
+          return { 
+            ...movie, 
+            poster_url: movie.poster_url,
+          };
         } catch (error) {
           console.error(`Error fetching poster for ${movie.title}:`, error);
           return { ...movie, poster_url: '' };
@@ -48,11 +73,51 @@ const SearchEpisodeContainer: React.FC<SearchEpisodeContainerProps> = ({ fetchEp
     setMovies(updatedMovies);
   };
 
-  useEffect(() => {
-    fetchPosterUrls();
-  }, [selectedMovie]);
-  
 
+
+  const fetchRatings = async () => {
+    const currentMovies = [...movies];
+    const allRatings: Object[] = [];
+    
+    const updatedRatings = await Promise.all(
+        currentMovies.map(async (movie) => {
+            try {
+                const endpoint = "Star Wars: Episode " + decimalToRomanNumerals(selectedMovie?.episode_id) + " - " + selectedMovie?.title;
+                const response = await fetch(`${process.env.NEXT_PUBLIC_OMDB_URI}&t=${encodeURIComponent(endpoint)}`);
+                const data: Omdp = await response.json();
+                
+                if (data && data.Ratings && data.Ratings.length) {
+                    movie.imdb_rating = data?.Ratings[0]?.Value || "N/A";
+                    movie.rotten_tomatoes_rating = data?.Ratings[1]?.Value || "N/A";
+                    movie.metacritic_rating = data?.Ratings[2]?.Value || "N/A";
+                }
+                
+                const episode_id = movie.episode_id;
+                const imdbRating = movie.imdb_rating;
+                const rottenTom = movie.rotten_tomatoes_rating;
+                const metacritic = movie.metacritic_rating;
+                
+                const ratingsObj = {
+                    episode_id,
+                    ratings: {
+                        imdb: imdbRating,
+                        rotten_tomatoes: rottenTom,
+                        metacritic: metacritic
+                    }
+                }
+
+                allRatings.push(ratingsObj);
+                return allRatings;
+            } catch (error) {
+                console.error(`Error fetching ratings for ${selectedMovie}:`, error);
+                return;
+            }
+        })
+    );
+    
+    setRatings(updatedRatings[0]);
+  }
+  
   const sortedAndFilteredMovies = useMemo(() => {
     let episodes = [...movies];
 
@@ -69,16 +134,6 @@ const SearchEpisodeContainer: React.FC<SearchEpisodeContainerProps> = ({ fetchEp
     return episodes;
   }, [movies, sortBy, searchText]);
 
-
-  useEffect(() => {
-    if (selectedMovie) {
-      return setHeader("Star Wars Saga Movies Table");
-    } else {
-      setHeader(initialHeader);
-    }
-
-  }, [selectedMovie]);
-
   const handleSearchChange = (text: string) => {
     setSearchText(text);
     setSelectedMovie(null);
@@ -94,15 +149,34 @@ const SearchEpisodeContainer: React.FC<SearchEpisodeContainerProps> = ({ fetchEp
     }
   };
 
+  const calculateAvgRating = () => {
+    let sum = 0;
+    if (selectedMovie?.imdb_rating) {
+      sum += parseFloat(selectedMovie?.imdb_rating)*10;
+    }
+    if (selectedMovie?.rotten_tomatoes_rating) {
+      const rottenTomRating: string = selectedMovie?.rotten_tomatoes_rating;
+      sum += parseInt(rottenTomRating.substring(0, rottenTomRating.indexOf("%")));
+    }
+    if (selectedMovie?.metacritic_rating) {
+      sum += Math.floor(parseInt(selectedMovie?.metacritic_rating))
+    }
+    
+    return sum/3;
+  }
+  const avg = <StarRatingComponent rating={Math.round(parseInt(calculateAvgRating().toString())/10)}/>
+
   return (
     <>
       <h4>{header}</h4><br />
       <SearchEpisode onSearchChange={handleSearchChange} onSortChange={handleSortChange}/>
       <MoviesTable 
+        ratings={ratings}
         movies={sortedAndFilteredMovies} 
         onMovieSelect={handleMovieSelect}
         selectedMovie={selectedMovie}
-        handleMovieSelect={handleMovieSelect} 
+        handleMovieSelect={handleMovieSelect}
+        averageRating={avg}
       />
     </>
   );

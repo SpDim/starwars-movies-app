@@ -24,7 +24,7 @@ describe('SearchEpisodeContainer', () => {
     });
     
     // Check if the initial header is rendered
-    expect(screen.getByText(/Please select a film to see details, such as opening crawl and director./)).toBeTruthy();
+    expect(screen.getByText(/Please select a film to see details, such as opening crawl, director and ratings./)).toBeTruthy();
 
     expect(screen.getByRole('button', {name: /Sort by.../})).toBeTruthy();
 

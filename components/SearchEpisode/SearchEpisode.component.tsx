@@ -7,7 +7,6 @@ interface SearchEpisodeComponentProps {
 }
 
 const SearchEpisode: React.FC<SearchEpisodeComponentProps> = ({ onSearchChange, onSortChange }) => {
-  // const sortBy = sortTerm;
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     onSearchChange(event.target.value);
   };
